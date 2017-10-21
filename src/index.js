@@ -6,7 +6,7 @@ class Square extends React.Component {
   render() {
     return (
       <button className="square">
-        {/* TODO */}
+        {this.props.value}
       </button>
     );
   }
@@ -14,7 +14,9 @@ class Square extends React.Component {
 
 class Board extends React.Component {
   renderSquare(i) {
-    return <Square />;
+    // Square クラスの render メソッドに流す
+    // value の値は Square の this.props.value に渡される
+    return <Square value={i} />;
   }
 
   render() {
@@ -24,6 +26,7 @@ class Board extends React.Component {
       <div>
         <div className="status">{status}</div>
         <div className="board-row">
+          // それぞれ <button>...</button> が構築される
           {this.renderSquare(0)}
           {this.renderSquare(1)}
           {this.renderSquare(2)}
