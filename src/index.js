@@ -3,29 +3,52 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class Square extends React.Component {
-  constructor(props) {
-    super(props);
-    // 矩型の現在の値を state に格納する
-    this.state = {
-      value: null,
-    };
-  }
-
   render() {
     // クリック時に this.state の value の値を 'X' にセットする（そのまま描画される）
+    // props は親（Boardコンポーネント）から渡される情報（文字列や関数などなんでもあり）
     return (
-      <button className="square" onClick={() => this.setState({value: 'X'})}>
-        {this.state.value}
+      <button className="square" onClick={() => this.props.onClick()}>
+        {this.props.value}
       </button>
     );
   }
 }
 
 class Board extends React.Component {
+  // ボード全体の仕様の定義
+  // state は自身のコンポーネントの状態を管理する
+  // コンストラクタでボードサイズと初期値を指定
+  // Array(9)は、値が挿入されると
+  // ['O', null, null, 'X', 'X', null, null, null, null]
+  // のようになる
+  constructor(props) {
+    super(props);
+    // state はオブジェクトで管理する
+    this.state = {
+      squares: Array(9).fill(null),
+    };
+  }
+
+  handleClick(i) {
+    const squares = this.state.squares.slice();
+    squares[i] = 'X';
+    // this.setState で自身の state を key: value 形式で変更する
+    // key には this.state に存在する変えたい key 名、
+    // value には上書きしたい値を書く
+    this.setState({squares: squares});
+  }
+
   renderSquare(i) {
     // Square クラスの render メソッドに流す
+    // props は子コンポーネント（ここではSquare）に渡す情報
     // value の値は Square の this.props.value に渡される
-    return <Square value={i} />;
+    // onClick は Square の this.props.onClick() に渡される
+    return (
+      <Square
+        value={this.state.squares[i]}
+        onClick={() => this.handleClick(i)}
+        />
+    );
   }
 
   render() {
