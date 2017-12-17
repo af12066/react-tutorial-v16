@@ -24,18 +24,24 @@ class Board extends React.Component {
   constructor(props) {
     super(props);
     // state はオブジェクトで管理する
+    // 参照したい場合は this.state.xIsNext とか this.state['xIsNext'] とする
+    // （前者の方が補完が利きやすいので便利?）
     this.state = {
       squares: Array(9).fill(null),
+      xIsNext: true,
     };
   }
 
   handleClick(i) {
     const squares = this.state.squares.slice();
-    squares[i] = 'X';
+    squares[i] = this.state.xIsNext ? 'X' : 'O'; // 三項演算子（true: 'X', false: 'O'）
     // this.setState で自身の state を key: value 形式で変更する
     // key には this.state に存在する変えたい key 名、
     // value には上書きしたい値を書く
-    this.setState({squares: squares});
+    this.setState({
+      squares: squares,
+      xIsNext: !this.state.xIsNext
+    });
   }
 
   renderSquare(i) {
@@ -52,7 +58,7 @@ class Board extends React.Component {
   }
 
   render() {
-    const status = 'Next player: X';
+    const status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
 
     // {this.renderSquare(n)} ではそれぞれ <button>...</button> が構築される
     return (
